@@ -6,7 +6,7 @@ require 'itamae/plugin/resource/mysql/version'
 Gem::Specification.new do |spec|
   spec.name          = "itamae-plugin-resource-mysql"
   spec.version       = Itamae::Plugin::Resource::Mysql::VERSION
-  spec.authors       = ["letusfly85"]
+  spec.authors       = ["Shunsuke Wada"]
   spec.email         = ["letusfly95@gamil.com"]
   spec.summary       = %q{this plugin enables you to maintenance mysql service}
   spec.description   = %q{}
