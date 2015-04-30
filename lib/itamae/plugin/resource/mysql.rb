@@ -31,24 +31,6 @@ module Itamae
             end
         end
 
-        def action_start
-            unless current.exist
-                run_command(["/etc/init.d/mysql", "start"])
-            end
-        end
-
-        def action_stop
-            unless current.exist
-                run_command(["/etc/init.d/mysql", "stop"])
-            end
-        end
-
-        def action_restart
-            unless current.exist
-                run_command(["/etc/init.d/mysql", "restart"])
-            end
-        end
-
         def action_create_database(options)
             Itamae::Logger.info "create database..."
             query = "create database #{attributes.database}"
