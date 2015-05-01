@@ -7,14 +7,17 @@ module Itamae
     module Resource
       class Mysql < Itamae::Resource::Base
         COMMAND = 'mysql'
-        define_attribute :action, default: :start #, :stop, :restart, :create_user, :drop_user
+        define_attribute :action
 
         define_attribute :loginuser, type: String, default_name: false
         define_attribute :loginpass, type: String, default_name: false
 
         define_attribute :username, type: String, default_name: false
         define_attribute :password, type: String, default_name: false
+
         define_attribute :database, type: String, default_name: false
+        define_attribute :if_not_exists, type: String, default_name: false
+
         define_attribute :host, type: String, default_name: false
         define_attribute :port, type: String, default_name: false
 
@@ -32,10 +35,15 @@ module Itamae
         end
 
         def action_create_database(options)
-            Itamae::Logger.info "create database..."
-            query = "create database #{attributes.database}"
-            Itamae::Logger.info query
-            results = @client.query(query)
+            if attributes.if_not_exists
+                @query = "create database if not exists #{attributes.database}"
+            else
+                @query = "create database if not exists #{attributes.database}"
+            end
+
+            Itamae::Logger.info @query
+            results = @client.query(@query)
+            Itamae::Logger.info "created #{attributes.database}."
         end
 
         def action_create_user
@@ -44,7 +52,11 @@ module Itamae
         end
 
         def action_drop_user
-            #TODO
+            query = "drop user #{attributes.username}"
+
+            Itamae::Logger.info query
+            results = @client.query(query)
+            Itamae::Logger.info "dropped #{attributes.username}."
         end
         
       end
