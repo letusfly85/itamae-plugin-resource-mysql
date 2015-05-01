@@ -17,7 +17,7 @@ module Itamae
         define_attribute :password, type: String, default_name: false
 
         define_attribute :database, type: String, default_name: false
-        define_attribute :if_not_exists, type: String, default_name: false
+        define_attribute :if_not_exists, type: String, default_name: true
 
         define_attribute :host, type: String, default_name: false
         define_attribute :port, type: String, default_name: false
@@ -39,7 +39,7 @@ module Itamae
             if attributes.if_not_exists
                 @query = "create database if not exists #{attributes.database}"
             else
-                @query = "create database if not exists #{attributes.database}"
+                @query = "create database #{attributes.database}"
             end
 
             Itamae::Logger.info @query
