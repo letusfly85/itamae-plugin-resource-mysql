@@ -1,4 +1,5 @@
 #!/bin/bash
 
-rake build install
+rm -rf pkg/*gem
+rbenv exec rake build
 rbenv rehash

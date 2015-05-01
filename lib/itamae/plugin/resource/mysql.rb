@@ -6,7 +6,7 @@ module Itamae
     module Resource
       class Mysql < Itamae::Resource::Base
         COMMAND = 'mysql'
-        define_attribute :action
+        define_attribute :action, default: :create_user
 
         define_attribute :loginuser, type: String, default_name: false
         define_attribute :loginpass, type: String, default_name: false
@@ -15,6 +15,7 @@ module Itamae
         define_attribute :user_hosts, type: Array , default: []
         define_attribute :user_priviliges, type: Array , default: []
         define_attribute :password, type: String, default_name: false
+        define_attribute :with_grants, type: [TrueClass, FalseClass]
 
         define_attribute :database, type: String, default_name: false
         define_attribute :if_not_exists, type: String, default_name: true
@@ -47,19 +48,28 @@ module Itamae
             Itamae::Logger.info "created #{attributes.database}."
         end
 
-        def action_create_user
+        def action_create_user(options)
             check_user_hosts
 
             attributes.user_hosts.each do |host|
-                @query = "create user '#{attributes.username}'@'#{host}' identified by '#{attributes.password}'"
+                begin
+                    @query = "create user '#{attributes.username}'@'#{host}' identified by '#{attributes.password}'"
 
-                Itamae::Logger.info @query
-                results = @client.query(query)
-                Itamae::Logger.info "created '#{attributes.username}'@'#{host}'."
+                    Itamae::Logger.info @query
+                    results = @client.query(@query)
+                    Itamae::Logger.info "created '#{attributes.username}'@'#{host}'."
+
+                rescue Mysql2::Error => me
+                    Itamae::Logger.info me.message
+                end
+            end
+
+            if attributes.with_grants
+                action_grant_user(options)
             end
         end
 
-        def action_grant_user
+        def action_grant_user(options)
             check_user_hosts
             check_user_priviliges
 
@@ -68,17 +78,17 @@ module Itamae
                     @query = "grant #{privilige} on #{attributes.database}.* to '#{attributes.username}'@'#{host}'"
 
                     Itamae::Logger.info @query
-                    results = @client.query(query)
+                    results = @client.query(@query)
                     Itamae::Logger.info "granted #{privilige} to '#{attributes.username}'@'#{host}'."
                 end
             end
         end
 
-        def action_drop_user
-            query = "drop user #{attributes.username}"
+        def action_drop_user(options)
+            @query = "drop user #{attributes.username}"
 
-            Itamae::Logger.info query
-            results = @client.query(query)
+            Itamae::Logger.info @query
+            results = @client.query(@query)
             Itamae::Logger.info "dropped #{attributes.username}."
         end
 
