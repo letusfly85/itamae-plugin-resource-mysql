@@ -1,4 +1,3 @@
-#require "itamae/plugin/resource/mysql/version"
 require "itamae/resource/base"
 require "mysql2"
 
