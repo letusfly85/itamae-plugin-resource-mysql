@@ -1,6 +1,6 @@
 # Itamae::Plugin::Resource::Mysql
 
-TODO: Write a gem description
+This gem enables you to create database, user and drop them.
 
 ## Installation
 
@@ -20,7 +20,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+mysql "create user" do
+    database "hoge"
+    loginuser "root"
+    loginpass node['yourjson']['loginpass']
+    host "localhost"
+    port "3306"
+
+    username "hoge"
+    password "hoge"
+    user_hosts ["localhost", "%"]
+
+    with_grants true
+    user_priviliges ["all"]
+end
+```
 
 ## Contributing
 
