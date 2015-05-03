@@ -5,7 +5,6 @@ module Itamae
   module Plugin
     module Resource
       class Mysql < Itamae::Resource::Base
-        COMMAND = 'mysql'
         define_attribute :action, default: :create_user
 
         define_attribute :loginuser, type: String, default_name: false
