@@ -4,7 +4,7 @@ require "mysql2"
 module Itamae
   module Plugin
     module Resource
-      class Mysql < Itamae::Resource::Base
+      class MysqlUser < Itamae::Resource::Base
         define_attribute :action, default: :create_user
 
         define_attribute :loginuser, type: String, default_name: false
