@@ -24,11 +24,18 @@ module Itamae
 
         def set_current_attributes
             begin
-            @client = 
-                Mysql2::Client.new(:host => attributes.host,
-                                   :user => attributes.loginuser,
-                                   :password => attributes.loginpass,
-                                   :port => attributes.port)
+                if attributes.loginpass.nil?
+                    @client = 
+                    Mysql2::Client.new(:host => attributes.host,
+                                       :user => attributes.loginuser,
+                                       :port => attributes.port)
+               else
+                    @client = 
+                    Mysql2::Client.new(:host => attributes.host,
+                                       :user => attributes.loginuser,
+                                       :password => attributes.loginpass,
+                                       :port => attributes.port)
+               end
             rescue => e
                 Itamae::Logger::info e
                 raise e
